@@ -1,1 +1,3 @@
-# spring-services-rest
+# sport-service-rest
+
+SPBSTU project
