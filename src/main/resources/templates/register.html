@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
+</head>
+
+<body onload='document.f.username.focus();'>
+<h3>Register</h3>
+<form name='f' action='/register' method='POST'>
+    <table>
+        <tr>
+            <td>User:</td>
+            <td><input type='text' name='username' value=''/></td>
+        </tr>
+        <tr>
+            <td>Password:</td>
+            <td><input type='password' name='password' value=''/></td>
+        </tr>
+        <tr>
+            <td>email:</td>
+            <td><input type='text' name='email' value=''/></td>
+        </tr>
+        <tr>
+            <td>authority:</td>
+            <td><select name='authority'>
+                <option value="ROLE_USER">USER</option>
+                <option value="ROLE_TRAINER">TRAINER</option>
+            </select></td>
+        </tr>
+        <tr>
+            <td>fname:</td>
+            <td><input type='text' name='firstName' value=''/></td>
+        </tr>
+        <tr>
+            <td>lname:</td>
+            <td><input type='text' name='lastName' value=''/></td>
+        </tr>
+        <tr>
+            <td><input type='hidden' name='enabled' value='true'/></td>
+        </tr>
+        <tr>
+            <td colspan='2'><input name="submit" type="submit" value="Submit"/></td>
+        </tr>
+        <tr>
+            <td><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/></td>
+        </tr>
+    </table>
+</form>
+<a th:href="@{/}">Home</a>
+</body>
+
+</html>

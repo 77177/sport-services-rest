@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Trainers</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
+</head>
+<body>
+TRAINERS
+<table class="table-bordered">
+    <tr>
+        <td>Id</td>
+        <td>First name</td>
+        <td>Last name</td>
+        <td>Sign ups</td>
+    </tr>
+    <tr th:each="trainer: ${trainers}">
+        <td th:text="${trainer.getId()}"></td>
+        <td th:text="${trainer.getFirstName()}"></td>
+        <td th:text="${trainer.getLastName()}"></td>
+        <td><table>
+            <tr th:each="trainerRequest :${trainerRequests}">
+                <td th:if="${trainerRequest.getTrainer().getId().equals(trainer.getId())}">
+                    <div>
+                        <p th:text="${trainerRequest.getStartTime()}"></p>
+                        <p th:text="${trainerRequest.getEndTime()}"></p>
+                    </div>
+                </td>
+            </tr>
+        </table></td>
+        <td>
+            <form sec:authorize="hasRole('USER')" name='f' th:action="@{/services/trainers/apply}" method='GET'>
+                <table>
+                    <td>
+                        <input type='hidden' name='id' th:value="${trainer.getId()}"/>
+                    </td>
+                    <td>
+                        <input type='datetime-local' name='start'/>
+                    </td>
+                    <td>
+                        <input type='datetime-local' name='end'/>
+                    </td>
+                    <td>
+                        <input name="submit" type="submit" value="apply"/>
+                    </td>
+                    <td>
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    </td>
+                </table>
+            </form>
+        </td>
+    </tr>
+</table>
+<a href="/">Home</a>
+<form name='f' sec:authorize="isAuthenticated()" action='/logout' method='POST'>
+    <table>
+        <tr>
+            <td><input type='submit' name='Logout' value='Logout'/></td>
+        </tr>
+        <tr>
+            <td><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/></td>
+        </tr>
+    </table>
+</form>
+<p th:if="${error}" class="text-danger">ERROR TIME OVERLAPPING</p>
+</body>
+</html>

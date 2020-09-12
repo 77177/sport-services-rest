@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
+<head>
+    <title>Profile</title>
+</head>
+<body>
+<div>
+    <table class="table-bordered">
+        <tr>
+            <td>First name:</td>
+            <td th:text="${appUser.getFirstName()}"></td>
+        </tr>
+        <tr>
+            <td>Last name:</td>
+            <td th:text="${appUser.getLastName()}"></td>
+        </tr>
+        <tr>
+            <td>Role:</td>
+            <td th:text="${appUser.getAuthority()}"></td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td th:text="${appUser.getEmail()}"></td>
+        </tr>
+    </table>
+    <div sec:authorize="hasRole('ADMIN')">
+        <br/>
+        ROOM REQ
+        <table class="table-bordered">
+            <tr>
+                <td>Approved by Security</td>
+                <td>Approved by Admin</td>
+                <td>Requester</td>
+                <td>Room</td>
+                <td>Start time</td>
+                <td>End time</td>
+                <td>Status</td>
+            </tr>
+            <tr th:each="unapprovedRoomRequest: ${unapprovedRoomRequests}">
+                <td th:text="${unapprovedRoomRequest.getApprovedSecurity()}"></td>
+                <td th:text="${unapprovedRoomRequest.getApprovedAdmin()}"></td>
+                <td th:text="${unapprovedRoomRequest.getRequester()}"></td>
+                <td th:text="${unapprovedRoomRequest.getRoom()}"></td>
+                <td th:text="${unapprovedRoomRequest.getStartTime()}"></td>
+                <td th:text="${unapprovedRoomRequest.getEndTime()}"></td>
+                <td th:text="${unapprovedRoomRequest.getApprovedAdmin() and unapprovedRoomRequest.getApprovedSecurity() ? 'READY':'PENDING'}"></td>
+                <td><a th:if="${!unapprovedRoomRequest.getApprovedAdmin()}"
+                       th:href="@{/profile/rooms/approve(id=${unapprovedRoomRequest.getId()})}">approve</a></td>
+                <td><a th:href="@{/profile/rooms/reject(id=${unapprovedRoomRequest.getId()})}">remove</a></td>
+            </tr>
+        </table>
+    </div>
+    <div sec:authorize="hasRole('SECURITY')">
+        <br/>
+        ROOM REQ
+        <table class="table-bordered">
+            <tr>
+                <td>Approved by Security</td>
+                <td>Approved by Admin</td>
+                <td>Requester</td>
+                <td>Room</td>
+                <td>Start time</td>
+                <td>End time</td>
+            </tr>
+            <tr th:each="unapprovedRoomRequest: ${unapprovedRoomRequests}">
+                <td th:text="${unapprovedRoomRequest.getApprovedSecurity()}"></td>
+                <td th:text="${unapprovedRoomRequest.getApprovedAdmin()}"></td>
+                <td th:text="${unapprovedRoomRequest.getRequester()}"></td>
+                <td th:text="${unapprovedRoomRequest.getRoom()}"></td>
+                <td th:text="${unapprovedRoomRequest.getStartTime()}"></td>
+                <td th:text="${unapprovedRoomRequest.getEndTime()}"></td>
+                <td><a th:if="${!unapprovedRoomRequest.getApprovedSecurity()}"
+                       th:href="@{/profile/rooms/approve/sec(id=${unapprovedRoomRequest.getId()})}">approve</a></td>
+                <td><a th:href="@{/profile/rooms/reject(id=${unapprovedRoomRequest.getId()})}">remove</a></td>
+            </tr>
+        </table>
+            <br/>
+            TRAINER REQ
+            <table class="table-bordered">
+                <tr>
+                    <td>Approved by Security</td>
+                    <td>Approved by Trainer</td>
+                    <td>Requester</td>
+                    <td>Trainer</td>
+                    <td>Start time</td>
+                    <td>End time</td>
+                </tr>
+                <tr th:each="unapprovedTrainingRequest: ${unapprovedTrainingRequests}">
+                    <td th:text="${unapprovedTrainingRequest.getApprovedSecurity()}"></td>
+                    <td th:text="${unapprovedTrainingRequest.getApprovedTrainer()}"></td>
+                    <td th:text="${unapprovedTrainingRequest.getRequester()}"></td>
+                    <td th:text="${unapprovedTrainingRequest.getTrainer()}"></td>
+                    <td th:text="${unapprovedTrainingRequest.getStartTime()}"></td>
+                    <td th:text="${unapprovedTrainingRequest.getEndTime()}"></td>
+                    <td><a th:if="${!unapprovedTrainingRequest.getApprovedSecurity()}"
+                           th:href="@{/profile/trainers/approve/sec(id=${unapprovedTrainingRequest.getId()})}">approve</a></td>
+                    <td><a th:href="@{/profile/trainers/reject(id=${unapprovedTrainingRequest.getId()})}">remove</a></td>
+                </tr>
+            </table>
+
+    </div>
+    <div sec:authorize="hasRole('USER')">
+        <br/>
+        TRAINER REQ
+        <table class="table-bordered">
+            <tr>
+                <td>Approved by Trainer</td>
+                <td>Approved by Security</td>
+                <td>Requester</td>
+                <td>Trainer</td>
+                <td>Start time</td>
+                <td>End time</td>
+                <td>Status</td>
+            </tr>
+            <tr th:each="userTrainerRequests: ${appUser.getTrainerRequests()}">
+                <td th:text="${userTrainerRequests.getApprovedTrainer()}"></td>
+                <td th:text="${userTrainerRequests.getApprovedSecurity()}"></td>
+                <td th:text="${userTrainerRequests.getRequester()}"></td>
+                <td th:text="${userTrainerRequests.getTrainer()}"></td>
+                <td th:text="${userTrainerRequests.getStartTime()}"></td>
+                <td th:text="${userTrainerRequests.getEndTime()}"></td>
+                <td th:text="${(userTrainerRequests.getApprovedTrainer() and userTrainerRequests.getApprovedSecurity()) ? 'READY':'PENDING'}"></td>
+                <td><a th:if="${userTrainerRequests.getApprovedTrainer() and userTrainerRequests.getApprovedSecurity()}"
+                       th:href="@{/profile/trainers/reject(id=${userTrainerRequests.getId()})}">remove</a></td>
+            </tr>
+        </table>
+    </div>
+    <div sec:authorize="hasRole('TRAINER')">
+        ROOM REQ
+        <table class="table-bordered">
+            <tr>
+                <td>Approved by Admin</td>
+                <td>Approved by Security</td>
+                <td>Requester</td>
+                <td>Room</td>
+                <td>Start time</td>
+                <td>End time</td>
+                <td>Status</td>
+            </tr>
+            <tr th:each="appUserRoomRequests: ${appUser.getRoomRequests()}">
+                <td th:text="${appUserRoomRequests.getApprovedAdmin()}"></td>
+                <td th:text="${appUserRoomRequests.getApprovedSecurity()}"></td>
+                <td th:text="${appUserRoomRequests.getRequester()}"></td>
+                <td th:text="${appUserRoomRequests.getRoom()}"></td>
+                <td th:text="${appUserRoomRequests.getStartTime()}"></td>
+                <td th:text="${appUserRoomRequests.getEndTime()}"></td>
+                <td th:text="${(appUserRoomRequests.getApprovedAdmin() and appUserRoomRequests.getApprovedSecurity()) ? 'READY':'PENDING'}"></td>
+                <td><a th:if="${appUserRoomRequests.getApprovedAdmin() and appUserRoomRequests.getApprovedSecurity()}"
+                       th:href="@{/profile/rooms/reject(id=${appUserRoomRequests.getId()})}">remove</a></td>
+            </tr>
+        </table>
+        TRAINER REQ
+        <table class="table-bordered">
+            <tr>
+                <td>Approved by Trainer</td>
+                <td>Approved by Security</td>
+                <td>Requester</td>
+                <td>Trainer</td>
+                <td>Start time</td>
+                <td>End time</td>
+                <td>Status</td>
+            </tr>
+            <tr th:each="trainerRequestsForTrainer: ${trainerRequestsForCurrentTrainer}">
+                <td th:text="${trainerRequestsForTrainer.getApprovedTrainer()}"></td>
+                <td th:text="${trainerRequestsForTrainer.getApprovedSecurity()}"></td>
+                <td th:text="${trainerRequestsForTrainer.getRequester()}"></td>
+                <td th:text="${trainerRequestsForTrainer.getTrainer()}"></td>
+                <td th:text="${trainerRequestsForTrainer.getStartTime()}"></td>
+                <td th:text="${trainerRequestsForTrainer.getEndTime()}"></td>
+                <td th:text="${(trainerRequestsForTrainer.getApprovedTrainer() and trainerRequestsForTrainer.getApprovedSecurity()) ? 'READY':'PENDING'}"></td>
+                <td><a th:if="${!trainerRequestsForTrainer.getApprovedTrainer()}"
+                       th:href="@{/profile/trainers/approve(id=${trainerRequestsForTrainer.getId()})}">approve</a></td>
+                <td><a th:href="@{/profile/trainers/reject(id=${trainerRequestsForTrainer.getId()})}">remove</a></td>
+            </tr>
+        </table>
+    </div>
+    <a href="/">Home</a>
+    <form name='f' sec:authorize="isAuthenticated()" action='/logout' method='POST'>
+        <table>
+            <tr>
+                <td><input type='submit' name='Logout' value='Logout'/></td>
+            </tr>
+            <tr>
+                <td><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>
