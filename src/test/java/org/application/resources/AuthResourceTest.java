@@ -40,9 +40,9 @@ public class AuthResourceTest {
 
     @Test
     public void register() {
-        when(appUserService.createUser(Mockito.any())).thenReturn(1L);
-
         AppUser appUser = Mockito.mock(AppUser.class);
+
+        when(appUserService.createUser(appUser)).thenReturn(1L);
 
         String login = authResource.register(appUser);
 
@@ -51,9 +51,9 @@ public class AuthResourceTest {
 
     @Test
     public void registerError() {
-        when(appUserService.createUser(Mockito.any())).thenThrow(new IllegalArgumentException("Broken role"));
-
         AppUser appUser = Mockito.mock(AppUser.class);
+
+        when(appUserService.createUser(appUser)).thenThrow(new IllegalArgumentException("Broken role"));
 
         String loginError = authResource.register(appUser);
 

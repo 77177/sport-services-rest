@@ -15,11 +15,12 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
-public class Security extends WebSecurityConfigurerAdapter {
+@Profile("local")
+public class SecurityLocal extends WebSecurityConfigurerAdapter {
 
     final DataSource dataSource;
 
-    public Security(DataSource dataSource) {
+    public SecurityLocal(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
@@ -59,5 +60,7 @@ public class Security extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .logoutSuccessUrl("/");
+
+        http.csrf().disable();
     }
 }
