@@ -58,9 +58,7 @@ TRAINERS
         <tr>
             <td><input type='submit' name='Logout' value='Logout'/></td>
         </tr>
-        <tr>
-            <td><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/></td>
-        </tr>
+
     </table>
 </form>
 <p th:if="${error}" class="text-danger">ERROR TIME OVERLAPPING</p>

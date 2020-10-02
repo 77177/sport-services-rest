@@ -65,9 +65,7 @@ ROOMS
             <tr>
                 <td colspan='2'><input name="submit" type="submit" value="Add"/></td>
             </tr>
-            <tr>
-                <td><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/></td>
-            </tr>
+
         </table>
     </form>
 </div>
@@ -78,9 +76,7 @@ ROOMS
         <tr>
             <td><input type='submit' name='Logout' value='Logout'/></td>
         </tr>
-        <tr>
-            <td><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/></td>
-        </tr>
+
     </table>
 </form>
 <p th:if="${error}" class="text-danger">ERROR TIME OVERLAPPING</p>
