@@ -16,14 +16,13 @@ public class UserController {
         this.appUserService = appUserService;
     }
 
-
     @GetMapping("/{id}")
-    public AppUserDto getAdmin(@PathVariable("id") Long id){
+    public AppUserDto getUser(@PathVariable("id") Long id){
         return appUserService.getUser(id);
     }
 
     @DeleteMapping("/{id}")
-    public AppUserDto deleteAdmin(@PathVariable("id") Long id){
+    public AppUserDto deleteUser(@PathVariable("id") Long id){
         return appUserService.deleteUser(id);
     }
 
