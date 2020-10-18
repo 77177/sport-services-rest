@@ -8,9 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/v1/api/test")
-public class TestController {
+public class TestController extends CrossOriginController {
 
     private final static TestObject testObj = new TestObject();
 
