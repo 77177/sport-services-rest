@@ -45,21 +45,8 @@ public class Security extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/profile/*").hasAnyAuthority("ROLE_TRAINER", "ROLE_ADMIN", "ROLE_USER","ROLE_SECURITY")
-                .antMatchers("/profile/**").hasAnyAuthority("ROLE_TRAINER", "ROLE_ADMIN", "ROLE_USER","ROLE_SECURITY")
-                .antMatchers("/services/*").hasAnyAuthority("ROLE_TRAINER", "ROLE_ADMIN", "ROLE_USER","ROLE_SECURITY")
-                .antMatchers("/services/**").hasAnyAuthority("ROLE_TRAINER", "ROLE_ADMIN", "ROLE_USER","ROLE_SECURITY")
-                .antMatchers("/records","/records/*").hasAuthority("ROLE_ADMIN")
-                .antMatchers("/**").permitAll()
-                .and()
-                .formLogin()
-                .loginPage("/login")
-                .failureForwardUrl("/login-error")
-                .defaultSuccessUrl("/profile/primary")
-                .and()
-                .logout()
-                .logoutSuccessUrl("/");
-
+                .antMatchers("/**").permitAll();
         http.csrf().disable();
+        http.cors().disable();
     }
 }
