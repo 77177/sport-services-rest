@@ -14,8 +14,8 @@ public class AppUserDto {
     private Long id;
     private String username;
     private String password;
-    private String lastname;
-    private String firstname;
+    private String lastName;
+    private String firstName;
     private String email;
     private String authority;
     private Boolean enabled;
