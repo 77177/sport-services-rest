@@ -14,6 +14,6 @@ public class ProfileController {
     @GetMapping()
     public String getUsername(){
         UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return principal.getUsername();
+        return "{ \"username\" : " + "\"" +principal.getUsername() + "\" }";
     }
 }

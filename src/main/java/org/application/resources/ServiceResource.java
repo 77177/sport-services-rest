@@ -17,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
-@Controller
 @RequestMapping("/services")
 public class ServiceResource {
 
