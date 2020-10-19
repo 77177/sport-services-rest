@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/v1/api/room")
-public class RoomController extends CrossOriginController {
+public class RoomController {
 
     private final RoomService roomService;
     private final ModelMapper modelMapper;

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/v1/api/test")
-public class TestController extends CrossOriginController {
+public class TestController {
 
     private final static TestObject testObj = new TestObject();
 

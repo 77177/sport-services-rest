@@ -2,7 +2,6 @@ package org.application.configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -45,8 +44,21 @@ public class Security extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/**").permitAll();
+                .antMatchers("/profile/*").hasAnyAuthority("ROLE_TRAINER", "ROLE_ADMIN", "ROLE_USER","ROLE_SECURITY")
+                .antMatchers("/profile/**").hasAnyAuthority("ROLE_TRAINER", "ROLE_ADMIN", "ROLE_USER","ROLE_SECURITY")
+                .antMatchers("/services/*").hasAnyAuthority("ROLE_TRAINER", "ROLE_ADMIN", "ROLE_USER","ROLE_SECURITY")
+                .antMatchers("/services/**").hasAnyAuthority("ROLE_TRAINER", "ROLE_ADMIN", "ROLE_USER","ROLE_SECURITY")
+                .antMatchers("/records","/records/*").hasAuthority("ROLE_ADMIN")
+                .antMatchers("/**").permitAll()
+                .and()
+                .formLogin()
+                .loginPage("/login")
+                .failureForwardUrl("/login-error")
+                .defaultSuccessUrl("/profile/primary")
+                .and()
+                .logout()
+                .logoutSuccessUrl("/");
+
         http.csrf().disable();
-        http.cors().disable();
     }
 }

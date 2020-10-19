@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/api/trainer")
-public class TrainerController extends CrossOriginController {
+public class TrainerController {
 
     private final AppUserService appUserService;
     private final ModelMapper modelMapper;
