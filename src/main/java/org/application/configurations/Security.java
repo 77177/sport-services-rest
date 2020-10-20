@@ -57,7 +57,7 @@ public class Security extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/v1/api/profile")
                 .and()
                 .logout()
-                .logoutSuccessUrl("/");
+                .logoutSuccessUrl("/v1/api/test");
 
         http.csrf().disable();
     }
