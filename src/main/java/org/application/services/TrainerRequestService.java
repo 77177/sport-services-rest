@@ -1,12 +1,14 @@
 package org.application.services;
 
+import org.application.dtos.TrainerRequestCreateDto;
 import org.application.models.custom.RequestRecord;
-import org.application.models.requests.TrainerRequest;
+import org.application.models.requests.RoomREquest;
 import org.application.models.users.AppUser;
 import org.application.models.users.Learner;
 import org.application.repositories.custom.CustomRepo;
 import org.application.repositories.requests.TrainerRequestRepo;
 import org.application.repositories.users.AppUserRepo;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.util.Pair;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -30,6 +32,8 @@ public class TrainerRequestService {
 
     private AppUserRepo appUserRepo;
 
+    private ModelMapper modelMapper;
+
     public TrainerRequestService(TrainerRequestRepo trainerRequestRepo, AppUserRepo appUserRepo,
                                  CustomRepo<RequestRecord,Long> requestRecordRepo) {
         this.trainerRequestRepo = trainerRequestRepo;
@@ -46,15 +50,15 @@ public class TrainerRequestService {
         AppUser trainer = appUserRepo.getOne(trainerId);
         AppUser user = appUserRepo.findByUsername(auth.getUsername());
 
-        TrainerRequest trainerRequest = getTrainerRequest(start, end, trainer, user);
+        RoomREquest trainerRequest = getTrainerRequest(start, end, trainer, user);
 
         trainerRequestRepo.save(trainerRequest);
         requestRecordRepo.save(new RequestRecord("TRAIN_REQ", trainerRequest.getRequester().toString(),
                 trainerRequest.getTrainer().toString(), LocalDate.now()));
     }
 
-    private TrainerRequest getTrainerRequest(LocalDateTime start, LocalDateTime end, AppUser trainer, AppUser user) {
-        TrainerRequest trainerRequest = new TrainerRequest();
+    private RoomREquest getTrainerRequest(LocalDateTime start, LocalDateTime end, AppUser trainer, AppUser user) {
+        RoomREquest trainerRequest = new RoomREquest();
         trainerRequest.setRequester(user);
         trainerRequest.setTrainer(trainer);
         trainerRequest.setStartTime(Timestamp.valueOf(start));
@@ -68,7 +72,7 @@ public class TrainerRequestService {
     }
 
     private void checkForOverlap(LocalDateTime start, LocalDateTime end, Long trainerId) {
-        List<TrainerRequest> all = trainerRequestRepo.findAll();
+        List<RoomREquest> all = trainerRequestRepo.findAll();
 
         Boolean isOverlapping = all.stream()
                 .filter(trainerRequest -> trainerRequest.getTrainer().getId().equals(trainerId))
@@ -91,42 +95,69 @@ public class TrainerRequestService {
     }
 
     @Transactional
-    public List<TrainerRequest> getAll() {
+    public List<RoomREquest> getAll() {
         return trainerRequestRepo.findAll();
     }
 
     @Transactional
-    public List<TrainerRequest> getRequestsForTrainer(AppUser trainer) {
+    public List<RoomREquest> getRequestsForTrainer(AppUser trainer) {
         return trainerRequestRepo.findByTrainer(trainer);
     }
 
     @Transactional
     public void approveRequestTrainer(Long requestId) {
-        TrainerRequest one = trainerRequestRepo.getOne(requestId);
+        RoomREquest one = trainerRequestRepo.getOne(requestId);
         one.setApprovedTrainer(true);
     }
 
     @Transactional
     public void approveRequestSecurity(Long requestId) {
-        TrainerRequest one = trainerRequestRepo.getOne(requestId);
+        RoomREquest one = trainerRequestRepo.getOne(requestId);
         one.setApprovedSecurity(true);
     }
 
     @Transactional
-    public List<TrainerRequest> getUnapprovedRequests() {
+    public List<RoomREquest> getUnapprovedRequests() {
         return getAll().stream().filter(trainerRequest -> (!trainerRequest.getApprovedTrainer() | !trainerRequest.getApprovedSecurity())).collect(toList());
     }
 
     @Transactional
-    public List<TrainerRequest> getApprovedRequests() {
+    public List<RoomREquest> getApprovedRequests() {
         return getAll().stream().filter(trainerRequest -> (trainerRequest.getApprovedTrainer() & trainerRequest.getApprovedSecurity())).collect(toList());
     }
 
     @Transactional
-    public void removeRequest(Long requestId) {
-        TrainerRequest matchedRequest = trainerRequestRepo.getOne(requestId);
+    public RoomREquest deleteTrainerRequest(Long trainingRequestId) {
+        RoomREquest matchedRequest = trainerRequestRepo.getOne(trainingRequestId);
         matchedRequest.setRequester(null);
         matchedRequest.setTrainer(null);
-        trainerRequestRepo.delete(requestId);
+        trainerRequestRepo.delete(trainingRequestId);
+        return matchedRequest;
+    }
+
+    @Transactional
+    public RoomREquest getTrainerRequest(Long trainingRequestId) {
+        return trainerRequestRepo.getOne(trainingRequestId);
+    }
+
+    @Transactional
+    public RoomREquest createTrainerRequest(TrainerRequestCreateDto trainerRequestCreateDto) throws SQLException {
+
+        LocalDateTime start = trainerRequestCreateDto.getStart();
+        LocalDateTime end = trainerRequestCreateDto.getEnd();
+        Long trainerId = trainerRequestCreateDto.getTrainerId();
+        checkForOverlap(start, end, trainerId);
+
+        AppUser trainer = appUserRepo.getOne(trainerId);
+        Long requesterId = trainerRequestCreateDto.getRequesterId();
+        AppUser user = appUserRepo.getOne(requesterId);
+
+        RoomREquest trainerRequest = getTrainerRequest(start, end, trainer, user);
+
+        RoomREquest savedRequest = trainerRequestRepo.save(trainerRequest);
+        requestRecordRepo.save(new RequestRecord("TRAIN_REQ", trainerRequest.getRequester().toString(),
+                trainerRequest.getTrainer().toString(), LocalDate.now()));
+
+        return savedRequest;
     }
 }

@@ -3,5 +3,5 @@ package org.application.dtos;
 import java.util.List;
 
 public class LearnerDto extends AppUserDto{
-    private List<TrainingRequestDto> trainerRequests;
+    private List<TrainerRequestDto> trainerRequests;
 }

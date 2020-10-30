@@ -1,8 +1,17 @@
 package org.application.dtos;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.sql.Timestamp;
 
-public class TrainingRequestDto {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class TrainerRequestDto {
 
     private Long id;
     private AppUserDto requester;

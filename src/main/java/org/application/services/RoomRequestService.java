@@ -1,8 +1,10 @@
 package org.application.services;
 
+import org.application.dtos.RoomRequestCreateDto;
 import org.application.models.Room;
 import org.application.models.custom.RequestRecord;
 import org.application.models.requests.RoomRequest;
+import org.application.models.requests.RoomREquest;
 import org.application.models.users.AppUser;
 import org.application.models.users.Trainer;
 import org.application.repositories.RoomRepo;
@@ -129,5 +131,38 @@ public class RoomRequestService {
         matchedRoomRequest.setRoom(null);
         matchedRoomRequest.setRequester(null);
         roomRequestRepo.delete(requestId);
+    }
+
+    @Transactional
+    public RoomRequest getRoomRequest(Long roomRequestId) {
+        return roomRequestRepo.getOne(roomRequestId);
+    }
+
+    @Transactional
+    public RoomRequest createRoomRequest(RoomRequestCreateDto roomRequestCreateDto) throws SQLException {
+        LocalDateTime start = roomRequestCreateDto.getStart();
+        LocalDateTime end = roomRequestCreateDto.getEnd();
+        Long roomId = roomRequestCreateDto.getRoomId();
+        checkForOverlap(start, end, roomId);
+
+        Room room = roomRepo.getOne(roomId);
+        Long trainerId = roomRequestCreateDto.getTrainerId();
+        AppUser user = appUserRepo.getOne(trainerId);
+
+        RoomRequest roomRequest = getRoomRequest(start, end, room, user);
+
+        RoomRequest savedRoomRequest = roomRequestRepo.save(roomRequest);
+        requestRecordRepo.save(new RequestRecord("ROOM_REQ", roomRequest.getRequester().toString(),
+                roomRequest.getRoom().toString(), LocalDate.now()));
+        return savedRoomRequest;
+    }
+
+    @Transactional
+    public RoomRequest deleteRoomRequest(Long roomRequestId) {
+        RoomRequest matchedRoomRequest = roomRequestRepo.getOne(roomRequestId);
+        matchedRoomRequest.setRoom(null);
+        matchedRoomRequest.setRequester(null);
+        roomRequestRepo.delete(roomRequestId);
+        return matchedRoomRequest;
     }
 }
