@@ -95,8 +95,6 @@ public class RoomRequestService {
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
-
-
     @Transactional
     public List<RoomRequest> getAll() {
         return roomRequestRepo.findAll();

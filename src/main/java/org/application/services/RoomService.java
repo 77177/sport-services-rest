@@ -22,7 +22,19 @@ public class RoomService {
     }
 
     @Transactional
-    public void createRoom(Room room) {
-        roomRepo.save(room);
+    public Room createRoom(Room room) {
+        return roomRepo.save(room);
+    }
+
+    @Transactional
+    public Room getRoom(Long roomId) {
+        return roomRepo.getOne(roomId);
+    }
+
+    @Transactional
+    public Room deleteRoom(Long roomId) {
+        Room one = roomRepo.getOne(roomId);
+        roomRepo.delete(roomId);
+        return one;
     }
 }
