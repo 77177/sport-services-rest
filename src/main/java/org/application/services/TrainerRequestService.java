@@ -2,7 +2,7 @@ package org.application.services;
 
 import org.application.dtos.TrainerRequestCreateDto;
 import org.application.models.custom.RequestRecord;
-import org.application.models.requests.RoomREquest;
+import org.application.models.requests.TrainerRequest;
 import org.application.models.users.AppUser;
 import org.application.models.users.Learner;
 import org.application.repositories.custom.CustomRepo;
@@ -50,15 +50,15 @@ public class TrainerRequestService {
         AppUser trainer = appUserRepo.getOne(trainerId);
         AppUser user = appUserRepo.findByUsername(auth.getUsername());
 
-        RoomREquest trainerRequest = getTrainerRequest(start, end, trainer, user);
+        TrainerRequest trainerRequest = getTrainerRequest(start, end, trainer, user);
 
         trainerRequestRepo.save(trainerRequest);
         requestRecordRepo.save(new RequestRecord("TRAIN_REQ", trainerRequest.getRequester().toString(),
                 trainerRequest.getTrainer().toString(), LocalDate.now()));
     }
 
-    private RoomREquest getTrainerRequest(LocalDateTime start, LocalDateTime end, AppUser trainer, AppUser user) {
-        RoomREquest trainerRequest = new RoomREquest();
+    private TrainerRequest getTrainerRequest(LocalDateTime start, LocalDateTime end, AppUser trainer, AppUser user) {
+        TrainerRequest trainerRequest = new TrainerRequest();
         trainerRequest.setRequester(user);
         trainerRequest.setTrainer(trainer);
         trainerRequest.setStartTime(Timestamp.valueOf(start));
@@ -72,7 +72,7 @@ public class TrainerRequestService {
     }
 
     private void checkForOverlap(LocalDateTime start, LocalDateTime end, Long trainerId) {
-        List<RoomREquest> all = trainerRequestRepo.findAll();
+        List<TrainerRequest> all = trainerRequestRepo.findAll();
 
         Boolean isOverlapping = all.stream()
                 .filter(trainerRequest -> trainerRequest.getTrainer().getId().equals(trainerId))
@@ -95,40 +95,40 @@ public class TrainerRequestService {
     }
 
     @Transactional
-    public List<RoomREquest> getAll() {
+    public List<TrainerRequest> getAll() {
         return trainerRequestRepo.findAll();
     }
 
     @Transactional
-    public List<RoomREquest> getRequestsForTrainer(AppUser trainer) {
+    public List<TrainerRequest> getRequestsForTrainer(AppUser trainer) {
         return trainerRequestRepo.findByTrainer(trainer);
     }
 
     @Transactional
     public void approveRequestTrainer(Long requestId) {
-        RoomREquest one = trainerRequestRepo.getOne(requestId);
+        TrainerRequest one = trainerRequestRepo.getOne(requestId);
         one.setApprovedTrainer(true);
     }
 
     @Transactional
     public void approveRequestSecurity(Long requestId) {
-        RoomREquest one = trainerRequestRepo.getOne(requestId);
+        TrainerRequest one = trainerRequestRepo.getOne(requestId);
         one.setApprovedSecurity(true);
     }
 
     @Transactional
-    public List<RoomREquest> getUnapprovedRequests() {
+    public List<TrainerRequest> getUnapprovedRequests() {
         return getAll().stream().filter(trainerRequest -> (!trainerRequest.getApprovedTrainer() | !trainerRequest.getApprovedSecurity())).collect(toList());
     }
 
     @Transactional
-    public List<RoomREquest> getApprovedRequests() {
+    public List<TrainerRequest> getApprovedRequests() {
         return getAll().stream().filter(trainerRequest -> (trainerRequest.getApprovedTrainer() & trainerRequest.getApprovedSecurity())).collect(toList());
     }
 
     @Transactional
-    public RoomREquest deleteTrainerRequest(Long trainingRequestId) {
-        RoomREquest matchedRequest = trainerRequestRepo.getOne(trainingRequestId);
+    public TrainerRequest deleteTrainerRequest(Long trainingRequestId) {
+        TrainerRequest matchedRequest = trainerRequestRepo.getOne(trainingRequestId);
         matchedRequest.setRequester(null);
         matchedRequest.setTrainer(null);
         trainerRequestRepo.delete(trainingRequestId);
@@ -136,12 +136,12 @@ public class TrainerRequestService {
     }
 
     @Transactional
-    public RoomREquest getTrainerRequest(Long trainingRequestId) {
+    public TrainerRequest getTrainerRequest(Long trainingRequestId) {
         return trainerRequestRepo.getOne(trainingRequestId);
     }
 
     @Transactional
-    public RoomREquest createTrainerRequest(TrainerRequestCreateDto trainerRequestCreateDto) throws SQLException {
+    public TrainerRequest createTrainerRequest(TrainerRequestCreateDto trainerRequestCreateDto) throws SQLException {
 
         LocalDateTime start = trainerRequestCreateDto.getStart();
         LocalDateTime end = trainerRequestCreateDto.getEnd();
@@ -152,9 +152,9 @@ public class TrainerRequestService {
         Long requesterId = trainerRequestCreateDto.getRequesterId();
         AppUser user = appUserRepo.getOne(requesterId);
 
-        RoomREquest trainerRequest = getTrainerRequest(start, end, trainer, user);
+        TrainerRequest trainerRequest = getTrainerRequest(start, end, trainer, user);
 
-        RoomREquest savedRequest = trainerRequestRepo.save(trainerRequest);
+        TrainerRequest savedRequest = trainerRequestRepo.save(trainerRequest);
         requestRecordRepo.save(new RequestRecord("TRAIN_REQ", trainerRequest.getRequester().toString(),
                 trainerRequest.getTrainer().toString(), LocalDate.now()));
 

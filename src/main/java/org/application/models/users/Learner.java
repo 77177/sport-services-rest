@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.application.models.requests.RoomREquest;
+import org.application.models.requests.TrainerRequest;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -19,5 +19,5 @@ import java.util.List;
 public class Learner extends AppUser{
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "requester")
-    private List<RoomREquest> trainerRequests;
+    private List<TrainerRequest> trainerRequests;
 }

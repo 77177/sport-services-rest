@@ -4,7 +4,6 @@ import org.application.dtos.RoomRequestCreateDto;
 import org.application.models.Room;
 import org.application.models.custom.RequestRecord;
 import org.application.models.requests.RoomRequest;
-import org.application.models.requests.RoomREquest;
 import org.application.models.users.AppUser;
 import org.application.models.users.Trainer;
 import org.application.repositories.RoomRepo;
