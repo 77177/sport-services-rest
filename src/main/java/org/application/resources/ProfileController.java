@@ -1,9 +1,9 @@
 package org.application.resources;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.application.models.users.AppUser;
+import org.application.services.AppUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,19 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/v1/api/profile")
+@RequiredArgsConstructor
 public class ProfileController {
 
+    private final AppUserService appUserService;
 
     @GetMapping()
-    public Username getUsername(){
-        UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return new Username(principal.getUsername());
-    }
-
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    private static class Username {
-        private String username;
+    public AppUser getUsername(){
+        return appUserService.getCurrentUserInfo();
     }
 }
