@@ -11,5 +11,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class TestObject {
 
-    private String test = "testBack";
+    private String test = "";
 }

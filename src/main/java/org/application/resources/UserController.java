@@ -26,9 +26,8 @@ public class UserController {
         return appUserService.deleteUser(id);
     }
 
-    @PostMapping("/{id}")
-    public long createUser(@PathVariable("id") Long id, @RequestBody AppUserDto appUserDto){
-        appUserDto.setId(id);
+    @PostMapping("/")
+    public long createUser(@RequestBody AppUserDto appUserDto){
         return appUserService.createUser(appUserDto);
     }
 }
