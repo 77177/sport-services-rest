@@ -15,12 +15,12 @@ import java.util.List;
 @RestController
 @NoArgsConstructor
 @RequestMapping("/records")
-public class RecordResource {
+public class RecordController {
 
     private CustomRepo<RequestRecord,Long> requestRecordRepo;
 
     @Autowired
-    public RecordResource(CustomRepo<RequestRecord,Long> requestRecordRepo) {
+    public RecordController(CustomRepo<RequestRecord,Long> requestRecordRepo) {
         this.requestRecordRepo = requestRecordRepo;
     }
 

@@ -1,5 +1,10 @@
 package org.application.resources;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,8 +17,15 @@ public class ProfileController {
 
 
     @GetMapping()
-    public String getUsername(){
+    public Username getUsername(){
         UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return "{ \"username\" : " + "\"" +principal.getUsername() + "\" }";
+        return new Username(principal.getUsername());
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    private static class Username {
+        private String username;
     }
 }
