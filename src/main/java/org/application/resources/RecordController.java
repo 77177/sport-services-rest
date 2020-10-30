@@ -24,7 +24,6 @@ public class RecordController {
         this.requestRecordRepo = requestRecordRepo;
     }
 
-
     @GetMapping
     public List<RequestRecord> getRecords() throws SQLException {
         return requestRecordRepo.getAll();
