@@ -160,4 +160,10 @@ public class TrainerRequestService {
 
         return savedRequest;
     }
+
+    @Transactional
+    public List<TrainerRequest> getTrainerRequestForLearner(Long learnerId) {
+        AppUser learner = appUserRepo.findOne(learnerId);
+        return trainerRequestRepo.findTrainerRequestByRequester(learner);
+    }
 }

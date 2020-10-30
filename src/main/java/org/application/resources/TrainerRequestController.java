@@ -9,6 +9,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/api/request/train")
@@ -35,5 +37,21 @@ public class TrainerRequestController {
     public TrainerRequestDto deleteTrainerRequest(@PathVariable("requestId") Long trainingRequestId){
         TrainerRequest trainerRequest = trainerRequestService.deleteTrainerRequest(trainingRequestId);
         return modelMapper.map(trainerRequest, TrainerRequestDto.class);
+    }
+
+    @GetMapping("/learner/{learnerId}")
+    public List<TrainerRequestDto> getTrainerRequestForLearner(@PathVariable("learnerId") Long learnerId){
+        List<TrainerRequest> trainerRequestsForLearner = trainerRequestService.getTrainerRequestForLearner(learnerId);
+        return trainerRequestsForLearner.stream()
+                .map(trainerRequest -> modelMapper.map(trainerRequest, TrainerRequestDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/all")
+    public List<TrainerRequestDto> getAllTrainerRequest(){
+        List<TrainerRequest> trainerRequestsForLearner = trainerRequestService.getAll();
+        return trainerRequestsForLearner.stream()
+                .map(trainerRequest -> modelMapper.map(trainerRequest, TrainerRequestDto.class))
+                .collect(Collectors.toList());
     }
 }

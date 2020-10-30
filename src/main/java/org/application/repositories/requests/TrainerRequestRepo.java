@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface TrainerRequestRepo extends JpaRepository<TrainerRequest,Long> {
     List<TrainerRequest> findByTrainer(AppUser trainer);
+    List<TrainerRequest> findTrainerRequestByRequester(AppUser requester);
 }

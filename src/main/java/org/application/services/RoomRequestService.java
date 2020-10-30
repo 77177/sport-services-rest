@@ -1,6 +1,7 @@
 package org.application.services;
 
 import org.application.dtos.RoomRequestCreateDto;
+import org.application.dtos.RoomRequestDto;
 import org.application.models.Room;
 import org.application.models.custom.RequestRecord;
 import org.application.models.requests.RoomRequest;
@@ -161,5 +162,11 @@ public class RoomRequestService {
         matchedRoomRequest.setRequester(null);
         roomRequestRepo.delete(roomRequestId);
         return matchedRoomRequest;
+    }
+
+    @Transactional
+    public List<RoomRequest> getRoomRequestsForTrainer(Long trainerId) {
+        AppUser trainer = appUserRepo.findOne(trainerId);
+        return roomRequestRepo.findByRequester(trainer);
     }
 }

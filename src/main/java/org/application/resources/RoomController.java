@@ -1,6 +1,7 @@
 package org.application.resources;
 
 import org.application.dtos.RoomDto;
+import org.application.dtos.RoomRequestDto;
 import org.application.models.Room;
 import org.application.services.RoomService;
 import org.modelmapper.ModelMapper;

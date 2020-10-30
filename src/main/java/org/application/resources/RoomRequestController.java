@@ -9,6 +9,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/api/request/room")
@@ -34,5 +36,21 @@ public class RoomRequestController {
     public RoomRequestDto deleteRoomRequest(@PathVariable("requestId") Long trainingRequestId){
         RoomRequest roomRequest = roomRequestService.deleteRoomRequest(trainingRequestId);
         return modelMapper.map(roomRequest, RoomRequestDto.class);
+    }
+
+    @GetMapping("/trainer/{trainerId}")
+    public List<RoomRequestDto> getRoomRequestsForTrainer(@PathVariable ("trainerId") Long trainerId) {
+        List<RoomRequest> roomRequestsForTrainer = roomRequestService.getRoomRequestsForTrainer(trainerId);
+        return roomRequestsForTrainer.stream()
+                .map(roomRequest -> modelMapper.map(roomRequest, RoomRequestDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/all")
+    public List<RoomRequestDto> getAllRoomRequests() {
+        List<RoomRequest> roomRequestsForTrainer = roomRequestService.getAll();
+        return roomRequestsForTrainer.stream()
+                .map(roomRequest -> modelMapper.map(roomRequest, RoomRequestDto.class))
+                .collect(Collectors.toList());
     }
 }
