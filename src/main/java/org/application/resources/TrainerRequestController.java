@@ -41,8 +41,16 @@ public class TrainerRequestController {
 
     @GetMapping("/learner/{learnerId}")
     public List<TrainerRequestDto> getTrainerRequestForLearner(@PathVariable("learnerId") Long learnerId){
-        List<TrainerRequest> trainerRequestsForLearner = trainerRequestService.getTrainerRequestForLearner(learnerId);
+        List<TrainerRequest> trainerRequestsForLearner = trainerRequestService.getTrainerRequestsForLearner(learnerId);
         return trainerRequestsForLearner.stream()
+                .map(trainerRequest -> modelMapper.map(trainerRequest, TrainerRequestDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/trainer/{trainerId}")
+    public List<TrainerRequestDto> getTrainerRequestsForTrainer(@PathVariable("trainerId") Long trainerId){
+        List<TrainerRequest> trainerRequestsForTrainer = trainerRequestService.getTrainerRequestsForTrainer(trainerId);
+        return trainerRequestsForTrainer.stream()
                 .map(trainerRequest -> modelMapper.map(trainerRequest, TrainerRequestDto.class))
                 .collect(Collectors.toList());
     }

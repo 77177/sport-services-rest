@@ -1,10 +1,10 @@
 package org.application.services;
 
+import lombok.RequiredArgsConstructor;
 import org.application.dtos.AppUserDto;
 import org.application.models.users.*;
 import org.application.repositories.users.*;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,31 +16,17 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 @Service
+@RequiredArgsConstructor
 public class AppUserService {
 
-    private AppUserRepo appUserRepo;
+    private final AppUserRepo appUserRepo;
+    private final TrainerRepo trainerRepo;
+    private final AdminRepo adminRepo;
+    private final SecurityRepo securityRepo;
+    private final LearnerRepo learnerRepo;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final ModelMapper modelMapper;
 
-    private TrainerRepo trainerRepo;
-
-    private AdminRepo adminRepo;
-
-    private SecurityRepo securityRepo;
-
-    private LearnerRepo learnerRepo;
-    @Autowired
-    private ModelMapper modelMapper;
-
-    public AppUserService(AppUserRepo appUserRepo,
-                          TrainerRepo trainerRepo,
-                          AdminRepo adminRepo,
-                          SecurityRepo securityRepo,
-                          LearnerRepo learnerRepo) {
-        this.appUserRepo = appUserRepo;
-        this.trainerRepo = trainerRepo;
-        this.adminRepo = adminRepo;
-        this.securityRepo = securityRepo;
-        this.learnerRepo = learnerRepo;
-    }
 
     @Transactional
     public List<AppUser> getTrainers() {
@@ -54,7 +40,7 @@ public class AppUserService {
     @Transactional
     public long createUser(AppUser appUser) {
 
-        appUser.setPassword(new BCryptPasswordEncoder().encode(appUser.getPassword()));
+        appUser.setPassword(bCryptPasswordEncoder.encode(appUser.getPassword()));
 
         String authority = appUser.getAuthority();
 

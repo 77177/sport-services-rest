@@ -162,8 +162,14 @@ public class TrainerRequestService {
     }
 
     @Transactional
-    public List<TrainerRequest> getTrainerRequestForLearner(Long learnerId) {
+    public List<TrainerRequest> getTrainerRequestsForLearner(Long learnerId) {
         AppUser learner = appUserRepo.findOne(learnerId);
         return trainerRequestRepo.findTrainerRequestByRequester(learner);
+    }
+
+    @Transactional
+    public List<TrainerRequest> getTrainerRequestsForTrainer(Long trainerId) {
+        AppUser trainer = appUserRepo.findOne(trainerId);
+        return trainerRequestRepo.findByTrainer(trainer);
     }
 }
