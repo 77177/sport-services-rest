@@ -1,7 +1,5 @@
 package org.application.resources;
 
-
-import org.application.dtos.AdminDto;
 import org.application.dtos.AppUserDto;
 import org.application.services.AppUserService;
 import org.springframework.web.bind.annotation.*;
