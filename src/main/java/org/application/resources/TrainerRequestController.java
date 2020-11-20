@@ -62,4 +62,14 @@ public class TrainerRequestController {
                 .map(trainerRequest -> modelMapper.map(trainerRequest, TrainerRequestDto.class))
                 .collect(Collectors.toList());
     }
+
+    @GetMapping("/security/approve/{requestId}")
+    public void approveTrainerRequestSecurity(@PathVariable("requestId") Long requestId) {
+        trainerRequestService.approveRequestSecurity(requestId);
+    }
+
+    @GetMapping("/trainer/approve/{requestId}")
+    public void approveTrainerRequestTrainer(@PathVariable("requestId") Long requestId) {
+        trainerRequestService.approveRequestTrainer(requestId);
+    }
 }

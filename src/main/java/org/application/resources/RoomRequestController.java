@@ -53,4 +53,14 @@ public class RoomRequestController {
                 .map(roomRequest -> modelMapper.map(roomRequest, RoomRequestDto.class))
                 .collect(Collectors.toList());
     }
+
+    @GetMapping("/security/approve/{requestId}")
+    public void approveTrainerRequestSecurity(@PathVariable("requestId") Long requestId) {
+        roomRequestService.approveRequestSecurity(requestId);
+    }
+
+    @GetMapping("/admin/approve/{requestId}")
+    public void approveTrainerRequestAdmin(@PathVariable("requestId") Long requestId) {
+        roomRequestService.approveRequestAdmin(requestId);
+    }
 }
