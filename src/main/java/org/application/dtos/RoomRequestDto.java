@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 public class RoomRequestDto {
     private Long id;
     private AppUserDto requester;
-    private Room room;
+    private RoomDto room;
     private Timestamp startTime;
     private Timestamp endTime;
     private Boolean approvedAdmin;
