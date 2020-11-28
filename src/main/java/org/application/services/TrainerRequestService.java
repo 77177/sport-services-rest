@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -143,8 +144,8 @@ public class TrainerRequestService {
     @Transactional
     public TrainerRequest createTrainerRequest(TrainerRequestCreateDto trainerRequestCreateDto) throws SQLException {
 
-        LocalDateTime start = trainerRequestCreateDto.getStart();
-        LocalDateTime end = trainerRequestCreateDto.getEnd();
+        LocalDateTime start = LocalDateTime.ofInstant(trainerRequestCreateDto.getStart().toInstant(), ZoneId.systemDefault());
+        LocalDateTime end = LocalDateTime.ofInstant(trainerRequestCreateDto.getEnd().toInstant(), ZoneId.systemDefault());
         Long trainerId = trainerRequestCreateDto.getTrainerId();
         checkForOverlap(start, end, trainerId);
 
