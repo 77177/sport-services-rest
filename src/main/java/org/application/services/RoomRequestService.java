@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -138,8 +139,8 @@ public class RoomRequestService {
 
     @Transactional
     public RoomRequest createRoomRequest(RoomRequestCreateDto roomRequestCreateDto) throws SQLException {
-        LocalDateTime start = roomRequestCreateDto.getStart();
-        LocalDateTime end = roomRequestCreateDto.getEnd();
+        LocalDateTime start = LocalDateTime.ofInstant(roomRequestCreateDto.getStart().toInstant(), ZoneId.systemDefault());
+        LocalDateTime end = LocalDateTime.ofInstant(roomRequestCreateDto.getEnd().toInstant(), ZoneId.systemDefault());
         Long roomId = roomRequestCreateDto.getRoomId();
         checkForOverlap(start, end, roomId);
 
