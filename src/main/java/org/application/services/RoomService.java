@@ -28,12 +28,12 @@ public class RoomService {
 
     @Transactional
     public Room getRoom(Long roomId) {
-        return roomRepo.getOne(roomId);
+        return roomRepo.findOne(roomId);
     }
 
     @Transactional
     public Room deleteRoom(Long roomId) {
-        Room one = roomRepo.getOne(roomId);
+        Room one = roomRepo.findOne(roomId);
         roomRepo.delete(roomId);
         return one;
     }

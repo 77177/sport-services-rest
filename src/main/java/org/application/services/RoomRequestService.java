@@ -50,7 +50,7 @@ public class RoomRequestService {
         checkForOverlap(start, end, roomId);
 
         User auth = getPrincipal();
-        Room room = roomRepo.getOne(roomId);
+        Room room = roomRepo.findOne(roomId);
         AppUser user = appUserRepo.findByUsername(auth.getUsername());
 
         RoomRequest roomRequest = getRoomRequest(start, end, room, user);
@@ -114,19 +114,19 @@ public class RoomRequestService {
 
     @Transactional
     public void approveRequestAdmin(Long requestId) {
-        RoomRequest one = roomRequestRepo.getOne(requestId);
+        RoomRequest one = roomRequestRepo.findOne(requestId);
         one.setApprovedAdmin(true);
     }
 
     @Transactional
     public void approveRequestSecurity(Long requestId) {
-        RoomRequest one = roomRequestRepo.getOne(requestId);
+        RoomRequest one = roomRequestRepo.findOne(requestId);
         one.setApprovedSecurity(true);
     }
 
     @Transactional
     public void removeRequest(Long requestId) {
-        RoomRequest matchedRoomRequest = roomRequestRepo.getOne(requestId);
+        RoomRequest matchedRoomRequest = roomRequestRepo.findOne(requestId);
         matchedRoomRequest.setRoom(null);
         matchedRoomRequest.setRequester(null);
         roomRequestRepo.delete(requestId);
@@ -134,7 +134,7 @@ public class RoomRequestService {
 
     @Transactional
     public RoomRequest getRoomRequest(Long roomRequestId) {
-        return roomRequestRepo.getOne(roomRequestId);
+        return roomRequestRepo.findOne(roomRequestId);
     }
 
     @Transactional
@@ -144,9 +144,9 @@ public class RoomRequestService {
         Long roomId = roomRequestCreateDto.getRoomId();
         checkForOverlap(start, end, roomId);
 
-        Room room = roomRepo.getOne(roomId);
+        Room room = roomRepo.findOne(roomId);
         Long trainerId = roomRequestCreateDto.getTrainerId();
-        AppUser user = appUserRepo.getOne(trainerId);
+        AppUser user = appUserRepo.findOne(trainerId);
 
         RoomRequest roomRequest = getRoomRequest(start, end, room, user);
 
@@ -158,7 +158,7 @@ public class RoomRequestService {
 
     @Transactional
     public RoomRequest deleteRoomRequest(Long roomRequestId) {
-        RoomRequest matchedRoomRequest = roomRequestRepo.getOne(roomRequestId);
+        RoomRequest matchedRoomRequest = roomRequestRepo.findOne(roomRequestId);
         matchedRoomRequest.setRoom(null);
         matchedRoomRequest.setRequester(null);
         roomRequestRepo.delete(roomRequestId);

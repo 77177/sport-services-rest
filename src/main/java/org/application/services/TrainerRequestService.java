@@ -48,7 +48,7 @@ public class TrainerRequestService {
         checkForOverlap(start,end, trainerId);
 
         User auth = getPrincipal();
-        AppUser trainer = appUserRepo.getOne(trainerId);
+        AppUser trainer = appUserRepo.findOne(trainerId);
         AppUser user = appUserRepo.findByUsername(auth.getUsername());
 
         TrainerRequest trainerRequest = getTrainerRequest(start, end, trainer, user);
@@ -107,13 +107,13 @@ public class TrainerRequestService {
 
     @Transactional
     public void approveRequestTrainer(Long requestId) {
-        TrainerRequest one = trainerRequestRepo.getOne(requestId);
+        TrainerRequest one = trainerRequestRepo.findOne(requestId);
         one.setApprovedTrainer(true);
     }
 
     @Transactional
     public void approveRequestSecurity(Long requestId) {
-        TrainerRequest one = trainerRequestRepo.getOne(requestId);
+        TrainerRequest one = trainerRequestRepo.findOne(requestId);
         one.setApprovedSecurity(true);
     }
 
@@ -129,7 +129,7 @@ public class TrainerRequestService {
 
     @Transactional
     public TrainerRequest deleteTrainerRequest(Long trainingRequestId) {
-        TrainerRequest matchedRequest = trainerRequestRepo.getOne(trainingRequestId);
+        TrainerRequest matchedRequest = trainerRequestRepo.findOne(trainingRequestId);
         matchedRequest.setRequester(null);
         matchedRequest.setTrainer(null);
         trainerRequestRepo.delete(trainingRequestId);
@@ -138,7 +138,7 @@ public class TrainerRequestService {
 
     @Transactional
     public TrainerRequest getTrainerRequest(Long trainingRequestId) {
-        return trainerRequestRepo.getOne(trainingRequestId);
+        return trainerRequestRepo.findOne(trainingRequestId);
     }
 
     @Transactional
@@ -149,9 +149,9 @@ public class TrainerRequestService {
         Long trainerId = trainerRequestCreateDto.getTrainerId();
         checkForOverlap(start, end, trainerId);
 
-        AppUser trainer = appUserRepo.getOne(trainerId);
+        AppUser trainer = appUserRepo.findOne(trainerId);
         Long requesterId = trainerRequestCreateDto.getRequesterId();
-        AppUser user = appUserRepo.getOne(requesterId);
+        AppUser user = appUserRepo.findOne(requesterId);
 
         TrainerRequest trainerRequest = getTrainerRequest(start, end, trainer, user);
 
