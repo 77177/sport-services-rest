@@ -5,11 +5,17 @@ services:
     container_name: app1
     build:
       context: .
-    ports:
-    - 8080:8080
 
   db:
     container_name: db
     image: postgres:10
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+  lb:
+    container_name: lb
+    build:
+      context: ./nginx
     ports:
-    - 5432:5432
+      - 8080:80
