@@ -8,7 +8,6 @@ import org.application.services.TrainerRequestService;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,8 +26,7 @@ public class TrainerRequestController {
     }
 
     @PostMapping("/")
-    public TrainerRequestDto createTrainerRequest(@RequestBody TrainerRequestCreateDto trainerRequestCreateDto)
-            throws SQLException {
+    public TrainerRequestDto createTrainerRequest(@RequestBody TrainerRequestCreateDto trainerRequestCreateDto) {
         TrainerRequest trainerRequest = trainerRequestService.createTrainerRequest(trainerRequestCreateDto);
         return modelMapper.map(trainerRequest, TrainerRequestDto.class);
     }

@@ -1,14 +1,11 @@
 package org.application.services;
 
 import org.application.dtos.RoomRequestCreateDto;
-import org.application.dtos.RoomRequestDto;
 import org.application.models.Room;
-import org.application.models.custom.RequestRecord;
 import org.application.models.requests.RoomRequest;
 import org.application.models.users.AppUser;
 import org.application.models.users.Trainer;
 import org.application.repositories.RoomRepo;
-import org.application.repositories.custom.CustomRepo;
 import org.application.repositories.requests.RoomRequestRepo;
 import org.application.repositories.users.AppUserRepo;
 import org.springframework.data.util.Pair;
@@ -19,45 +16,24 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
 
 @Service
 public class RoomRequestService {
 
-    private CustomRepo requestRecordRepo;
+    private final RoomRequestRepo roomRequestRepo;
 
-    private RoomRequestRepo roomRequestRepo;
+    private final AppUserRepo appUserRepo;
 
-    private AppUserRepo appUserRepo;
+    private final RoomRepo roomRepo;
 
-    private RoomRepo roomRepo;
-
-    public RoomRequestService(RoomRequestRepo roomRequestRepo, AppUserRepo appUserRepo, RoomRepo roomRepo, CustomRepo requestRecordRepo) {
+    public RoomRequestService(RoomRequestRepo roomRequestRepo, AppUserRepo appUserRepo, RoomRepo roomRepo) {
         this.roomRequestRepo = roomRequestRepo;
         this.appUserRepo = appUserRepo;
         this.roomRepo = roomRepo;
-        this.requestRecordRepo = requestRecordRepo;
-    }
-
-    @Transactional
-    public void addRoomRequest(Long roomId, LocalDateTime start, LocalDateTime end) throws SQLException {
-
-        checkForOverlap(start, end, roomId);
-
-        User auth = getPrincipal();
-        Room room = roomRepo.findOne(roomId);
-        AppUser user = appUserRepo.findByUsername(auth.getUsername());
-
-        RoomRequest roomRequest = getRoomRequest(start, end, room, user);
-
-        roomRequestRepo.save(roomRequest);
-        requestRecordRepo.save(new RequestRecord("ROOM_REQ", roomRequest.getRequester().toString(),
-                roomRequest.getRoom().toString(), LocalDate.now()));
     }
 
     private void checkForOverlap(LocalDateTime start, LocalDateTime end, Long roomId) {
@@ -103,16 +79,6 @@ public class RoomRequestService {
     }
 
     @Transactional
-    public List<RoomRequest> getUnapprovedRequests() {
-        return getAll().stream().filter(roomRequest -> (!roomRequest.getApprovedAdmin() | !roomRequest.getApprovedSecurity())).collect(toList());
-    }
-
-    @Transactional
-    public List<RoomRequest> getApprovedRequests() {
-        return getAll().stream().filter(roomRequest -> (roomRequest.getApprovedAdmin() & roomRequest.getApprovedSecurity())).collect(toList());
-    }
-
-    @Transactional
     public void approveRequestAdmin(Long requestId) {
         RoomRequest one = roomRequestRepo.findOne(requestId);
         one.setApprovedAdmin(true);
@@ -125,35 +91,21 @@ public class RoomRequestService {
     }
 
     @Transactional
-    public void removeRequest(Long requestId) {
-        RoomRequest matchedRoomRequest = roomRequestRepo.findOne(requestId);
-        matchedRoomRequest.setRoom(null);
-        matchedRoomRequest.setRequester(null);
-        roomRequestRepo.delete(requestId);
-    }
-
-    @Transactional
     public RoomRequest getRoomRequest(Long roomRequestId) {
         return roomRequestRepo.findOne(roomRequestId);
     }
 
     @Transactional
-    public RoomRequest createRoomRequest(RoomRequestCreateDto roomRequestCreateDto) throws SQLException {
+    public RoomRequest createRoomRequest(RoomRequestCreateDto roomRequestCreateDto) {
         LocalDateTime start = LocalDateTime.ofInstant(roomRequestCreateDto.getStart().toInstant(), ZoneId.systemDefault());
         LocalDateTime end = LocalDateTime.ofInstant(roomRequestCreateDto.getEnd().toInstant(), ZoneId.systemDefault());
         Long roomId = roomRequestCreateDto.getRoomId();
         checkForOverlap(start, end, roomId);
-
         Room room = roomRepo.findOne(roomId);
         Long trainerId = roomRequestCreateDto.getTrainerId();
         AppUser user = appUserRepo.findOne(trainerId);
-
         RoomRequest roomRequest = getRoomRequest(start, end, room, user);
-
-        RoomRequest savedRoomRequest = roomRequestRepo.save(roomRequest);
-        requestRecordRepo.save(new RequestRecord("ROOM_REQ", roomRequest.getRequester().toString(),
-                roomRequest.getRoom().toString(), LocalDate.now()));
-        return savedRoomRequest;
+        return roomRequestRepo.save(roomRequest);
     }
 
     @Transactional
