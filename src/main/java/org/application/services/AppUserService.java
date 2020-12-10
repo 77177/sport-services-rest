@@ -38,47 +38,11 @@ public class AppUserService {
     }
 
     @Transactional
-    public long createUser(AppUser appUser) {
-
-        appUser.setPassword(bCryptPasswordEncoder.encode(appUser.getPassword()));
-
-        String authority = appUser.getAuthority();
-
-        long id = -1;
-
-        if (authority.equals("ROLE_TRAINER")) {
-            Trainer trainer = new Trainer();
-            trainer.apply(appUser);
-            trainer = trainerRepo.save(trainer);
-            id = trainer.getId();
-        } else if (authority.equals("ROLE_USER")) {
-            Learner learner = new Learner();
-            learner.apply(appUser);
-            learner = learnerRepo.save(learner);
-            id = learner.getId();
-        } else if (authority.equals("ROLE_ADMIN")) {
-            Admin admin = new Admin();
-            admin.apply(appUser);
-            admin = adminRepo.save(admin);
-            id = admin.getId();
-        } else if (authority.equals("ROLE_SECURITY")) {
-            SecurityUser securityUser = new SecurityUser();
-            securityUser.apply(appUser);
-            securityUser = securityRepo.save(securityUser);
-            id = securityUser.getId();
-        } else {
-            throw new IllegalArgumentException("Broken role");
-        }
-
-        return id;
-    }
-
-    @Transactional
     public long createUser(AppUserDto appUserDto) {
 
         AppUser appUser = modelMapper.map(appUserDto, AppUser.class);
 
-        appUser.setPassword(new BCryptPasswordEncoder().encode(appUser.getPassword()));
+        appUser.setPassword(bCryptPasswordEncoder.encode(appUser.getPassword()));
 
         String authority = appUser.getAuthority();
 

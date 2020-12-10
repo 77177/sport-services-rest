@@ -9,12 +9,9 @@ import org.application.repositories.RoomRepo;
 import org.application.repositories.requests.RoomRequestRepo;
 import org.application.repositories.users.AppUserRepo;
 import org.springframework.data.util.Pair;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -67,10 +64,6 @@ public class RoomRequestService {
         roomRequest.setEndTime(Timestamp.valueOf(end));
         ((Trainer) user).getRoomRequests().add(roomRequest);
         return roomRequest;
-    }
-
-    private User getPrincipal() {
-        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     @Transactional

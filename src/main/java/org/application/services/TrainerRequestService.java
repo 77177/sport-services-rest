@@ -1,16 +1,12 @@
 package org.application.services;
 
-import ch.qos.logback.core.db.dialect.PostgreSQLDialect;
 import org.application.dtos.TrainerRequestCreateDto;
 import org.application.models.requests.TrainerRequest;
 import org.application.models.users.AppUser;
 import org.application.models.users.Learner;
 import org.application.repositories.requests.TrainerRequestRepo;
 import org.application.repositories.users.AppUserRepo;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.util.Pair;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
