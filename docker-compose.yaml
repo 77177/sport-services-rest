@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  app1:
+    container_name: app1
+    build:
+      context: .
+    ports:
+    - 8080:8080
+
+  db:
+    container_name: db
+    image: postgres:10
+    ports:
+    - 5432:5432
