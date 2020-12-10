@@ -34,6 +34,6 @@ public class RoomRequestServiceTest {
         roomRequestService.approveRequestAdmin(testId);
 
         verify(roomRequestRepo).findOne(testId);
-        verify(roomRequest).setApprovedSecurity(true);
+        verify(roomRequest).setApprovedAdmin(true);
     }
 }
