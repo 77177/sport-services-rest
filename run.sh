@@ -1,3 +1,3 @@
-mvn clean package
-docker-compose build
-docker-compose up
+sudo mvn clean package
+sudo docker-compose build
+sudo docker-compose up
