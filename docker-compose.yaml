@@ -40,6 +40,6 @@ services:
 
   fe:
     container_name: fe
-    image: ang
+    image: fe
     ports:
       - 4200:4200
