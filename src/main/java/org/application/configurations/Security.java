@@ -1,5 +1,6 @@
 package org.application.configurations;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -9,6 +10,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.sql.DataSource;
 
@@ -53,12 +57,17 @@ public class Security extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .failureForwardUrl("/login-error")
                 .defaultSuccessUrl("/v1/api/profile")
                 .and()
                 .logout()
-                .logoutSuccessUrl("/v1/api/test");
+                .logoutSuccessUrl("/v1/api/test")
+                .and()
+                .httpBasic().disable();
 
+        CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
+        UrlBasedCorsConfigurationSource configurationSource = new UrlBasedCorsConfigurationSource();
+        configurationSource.registerCorsConfiguration("/**", corsConfiguration);
+        http.cors().configurationSource(configurationSource);
         http.csrf().disable();
     }
 }

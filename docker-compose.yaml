@@ -1,0 +1,39 @@
+version: '3.4'
+
+services:
+
+  app:
+    depends_on:
+      - db
+    container_name: app
+    build:
+      context: .
+    ports:
+    - 8080:8080
+
+  db:
+    container_name: db
+    image: postgres:9
+    ports:
+    - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+  fe:
+    depends_on:
+      - app
+    container_name: fe
+    image: fe
+    ports:
+      - 4200:4200
+
+#  lb:
+#    depends_on:
+#      - app
+#    container_name: lb
+#    build:
+#      context: ./nginx
+#    ports:
+#      - 8080:8080
+
