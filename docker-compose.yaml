@@ -37,3 +37,9 @@ services:
       context: ./nginx
     ports:
       - 8080:8080
+
+  fe:
+    container_name: fe
+    image: ang
+    ports:
+      - 4200:4200
