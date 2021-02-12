@@ -64,10 +64,6 @@ public class Security extends WebSecurityConfigurerAdapter {
                 .and()
                 .httpBasic().disable();
 
-        CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
-        UrlBasedCorsConfigurationSource configurationSource = new UrlBasedCorsConfigurationSource();
-        configurationSource.registerCorsConfiguration("/**", corsConfiguration);
-        http.cors().configurationSource(configurationSource);
         http.csrf().disable();
     }
 }
